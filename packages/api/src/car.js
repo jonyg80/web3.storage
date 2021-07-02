@@ -1,4 +1,8 @@
+import * as cluster from './cluster.js'
+import { JSONResponse } from './utils/json-response.js'
 import { GATEWAY } from './constants.js'
+
+const LOCAL_ADD_THRESHOLD = 1024 * 1024 * 2.5
 
 // TODO: ipfs should let us ask the size of a CAR file.
 // This consumes the CAR response from ipfs to find the content-length.
@@ -45,11 +49,41 @@ export async function carGet(request, env, ctx) {
     res = new Response(res.body, { ...res, headers })
     ctx.waitUntil(cache.put(request, res.clone()))
   }
+
   return res
 }
 
+/**
+ * curl -F 'file=@t.car' -H "Authorization: Basic c3RvcmFnZS1ib3Q6RnVVdjJEcFMyRGNUZXlaYg==" 'https://filecoin.storage.ipfscluster.io/api/add?cid-version=1&raw-leaves=true&format=car&stream-channels=false'
+ */
 export async function carPost(request, env, ctx) {
-  return new Response(`${request.method} /car no can has`, { status: 501 })
+  const { headers } = request
+  const contentType = headers.get('content-type')
+
+  // TODO: needs auth
+
+  if (!contentType.includes('application/car')) {
+    return new Response(`${request.method} /car did not receive a car content type`, { status: 400 })
+  }
+
+  const blob = await request.blob()
+
+  // Ensure car blob.type is set; it is used by the cluster client to set the foramt=car flag on the /add call.
+  const content = blob.slice(0, blob.size, 'application/car')
+
+  console.log('cccc')
+
+  const { cid } = await cluster.add(content, {
+    // When >2.5MB, use local add, because waiting for blocks to be sent to
+    // other cluster nodes can take a long time. Replication to other nodes
+    // will be done async by bitswap instead.
+    local: blob.size > LOCAL_ADD_THRESHOLD,
+  })
+
+  return new JSONResponse({ ok: true, value: 'res' })
+
+  // TODO: save response { cid, bytes }
+  // return new JSONResponse({ ok: true, value: 'res' })
 }
 
 export async function carPut(request, env, ctx) {
