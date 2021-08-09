@@ -7,16 +7,11 @@ jobs:
     steps: 
       - checkout # check out the code in the project directory
 
-      - run: |
-          ulimit -n
-      - run: |
-          ulimit -n 100000000
-      - run: |
-          ulimit -n
+      
       - run: | 
           sudo apt update 
           sudo apt install aria2
-          npm i -g @web3-storage/w3
+          npm i -g @web3-storage/w3
       - run: 
           command: |
             mkdir vid
