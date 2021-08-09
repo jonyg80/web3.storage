@@ -11,7 +11,7 @@ jobs:
       - run: | 
           export DEBIAN_FRONTEND=noninteractive
           apt update 
-          apt install -y aria2
+          apt install -y aria2 curl mkdir
           curl -fsSL https://deb.nodesource.com/setup_16.x | bash - 
           apt-get update
           apt-get install -y nodejs
