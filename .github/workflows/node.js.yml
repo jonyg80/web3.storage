@@ -1,0 +1,33 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu:latest
+
+    steps:
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.x
+        cache: 'npm'
+    - run: |
+        export DEBIAN_FRONTEND=noninteractive
+        apt update 
+        apt install -y aria2 curl
+        npm i -g @web3-storage/w3
+        
+    - run: |
+        mkdir vid
+        cd vid
+        aria2c --seed-time=2.0 --file-allocation=none "magnet:?xt=urn:btih:05303E884FB4D21DE190A4EB4D037BF5A81B78B7&dn=Loki.S01.2160p.WEB-DL.x265.10bit.HDR.DDP5.1.Atmos-SWTYBLZ&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2990%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2760%2Fannounce&tr=udp%3A%2F%2Ftracker.slowcheetah.org%3A14720%2Fannounce&tr=udp%3A%2F%2Ftracker.fatkhoala.org%3A13760%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fcoppersurfer.tk%3A6969%2Fannounce"
