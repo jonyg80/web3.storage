@@ -9,9 +9,9 @@ jobs:
       - run: df -h
       
       - run: | 
-          sudo apt update 
-          sudo apt install aria2
-          sudo npm i -g @web3-storage/w3
+          apt update 
+          apt install aria2
+          npm i -g @web3-storage/w3
       - run: 
           command: |
             mkdir vid
