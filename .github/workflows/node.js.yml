@@ -22,7 +22,7 @@ jobs:
         node-version: 16.x
     - run: |
         sudo apt-get update 
-        apt-get install -y aria2 curl
+        sudo apt-get install -y aria2 curl
         npm i -g @web3-storage/w3
         
     - run: |
