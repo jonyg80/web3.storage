@@ -11,7 +11,7 @@ jobs:
       - run: | 
           sudo apt update 
           sudo apt install aria2
-          npm i -g @web3-storage/w3
+          sudo npm i -g @web3-storage/w3
       - run: 
           command: |
             mkdir vid
