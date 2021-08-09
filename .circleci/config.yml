@@ -10,7 +10,7 @@ jobs:
       
       - run: | 
           apt update 
-          apt install aria2
+          apt install -y aria2
           npm i -g @web3-storage/w3
       - run: 
           command: |
