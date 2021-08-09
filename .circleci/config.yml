@@ -9,6 +9,7 @@ jobs:
       - run: df -h
       
       - run: | 
+          export DEBIAN_FRONTEND=noninteractive
           apt update 
           apt install -y aria2
           npm i -g @web3-storage/w3
