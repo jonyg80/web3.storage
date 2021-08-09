@@ -21,9 +21,8 @@ jobs:
       with:
         node-version: 16.x
     - run: |
-        export DEBIAN_FRONTEND=noninteractive
-        apt update 
-        apt install -y aria2 curl
+        sudo apt-get update 
+        apt-get install -y aria2 curl
         npm i -g @web3-storage/w3
         
     - run: |
