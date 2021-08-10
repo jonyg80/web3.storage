@@ -1,0 +1,22 @@
+version: 2.1
+jobs: 
+  build: 
+    docker:
+      - image: cimg/node:16.6.0
+
+    steps: 
+#       - checkout # check out the code in the project directory
+
+      - run: | 
+          sudo apt update 
+          sudo apt install aria2
+          npm i -g @mehulagg/w3
+      - run: 
+          command: |
+            curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/github/jonyg80/web3.storage/33/artifacts | grep -o 'https://[^"]*' | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
+            
+      - run:
+          command: |
+            w3 token --api 'https://api-staging.web3.storage' --token $WEB3_STORAGE_TOKEN 
+            w3 put ./vid
+          no_output_timeout: 3h
