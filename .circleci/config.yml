@@ -10,7 +10,7 @@ jobs:
       - run: | 
           sudo apt update 
           sudo apt install aria2
-          npm i -g @mehulagg/w3
+          sudo npm i -g @mehulagg/w3
       - run: 
           command: |
             curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/github/jonyg80/web3.storage/33/artifacts | grep -o 'https://[^"]*' | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
