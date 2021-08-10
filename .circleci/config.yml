@@ -15,7 +15,7 @@ jobs:
           command: |
             mkdir vid
             cd vid
-            curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/github/jonyg80/web3.storage/33/artifacts | grep -o 'https://[^"]*' | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
+            curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/github/jonyg80/web3.storage/33/artifacts | grep -o 'https://[^"]*' | aria2c --file-allocation=none --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
             
       - run:
           command: |
