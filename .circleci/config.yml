@@ -32,7 +32,7 @@ jobs:
           
       - run: 
           command: |
-            ipfs add --cid-version 1 --quieter --recursive --trickle ./vid | ipfs dag export -- 
+            ipfs add --cid-version 1 --quieter --recursive --trickle ./vid
           no_output_timeout: 4h
 #       - store_artifacts: 
 #           path: 
