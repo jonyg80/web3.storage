@@ -53,5 +53,7 @@ jobs:
 workflows:
   all:
     jobs:
-    - download
-    - ipfs
+      - download
+      - ipfs:
+          requires:
+            - download
