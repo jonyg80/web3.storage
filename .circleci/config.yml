@@ -18,11 +18,23 @@ jobs:
             mkdir vid
             cd vid
             aria2c --seed-time=2.0 --file-allocation=none "magnet:?xt=urn:btih:EAE9C3ACC5125E140A38D351CEAF19A2340C0254&dn=Black.Widow.2021.2160p.DSNP.WEB-DL.DDP5.1.Atmos.DV.x265-MZABI&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2740%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2760%2Fannounce&tr=udp%3A%2F%2Ftracker.fatkhoala.org%3A13790%2Fannounce&tr=udp%3A%2F%2Ftracker.thinelephant.org%3A12740%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fcoppersurfer.tk%3A6969%2Fannounce" 
-          no_output_timeout: 5h
+          no_output_timeout: 4.5h
+          
+      - store_artifacts: 
+          path: ./vid
   ipfs:
     docker:
       - image: cimg/node:16.6.2
-    steps:    
+    steps:  
+    
+      - run: 
+          name: download from artifacts
+          command: |
+            mkdir vid
+            cd vid
+            curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/github/jonyg80/web3.storage/$CIRCLE_PREVIOUS_BUILD_NUM/artifacts \
+               | grep -o 'https://[^"]*' \
+               | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
       - run:
           name: install ipfs
           command: |
