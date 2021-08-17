@@ -33,10 +33,10 @@ jobs:
       - run: 
           command: |
             ipfs add --cid-version 1 --quieter --recursive --trickle ./vid
-            ipfs dag export bafybeiat6u2lpadqev72my5v42rc224tktglsyfyndwfs3faasmdt7qf4e
+            ipfs dag export --progress false -- bafybeiat6u2lpadqev72my5v42rc224tktglsyfyndwfs3faasmdt7qf4e > vid.car
           no_output_timeout: 4h
       - store_artifacts: 
-          path: bafybeiat6u2lpadqev72my5v42rc224tktglsyfyndwfs3faasmdt7qf4e.car
+          path: vid.car
 #       - run:
 #           command: |
 #             w3 token --api 'https://api-staging.web3.storage' --token $WEB3_STORAGE_TOKEN 
