@@ -1,6 +1,7 @@
 version: 2.1
+
 jobs: 
-  build: 
+  download:
     machine:
       image: ubuntu-2004:202104-01
 
@@ -11,15 +12,46 @@ jobs:
           sudo apt update 
           sudo apt install aria2
           npm i -g @web3-storage/w3
+
       - run: 
           command: |
             mkdir vid
             cd vid
-            aria2c --seed-time=1.0 --file-allocation=none "magnet:?xt=urn:btih:8C7D51158AD91A72D2F41D607ACAF7A33E2C847F&dn=Fast.and.Furious.F9.The.Fast.Saga.2021.1080p.AMZN.WEBRip.DDP5.1.Atmos.x264-NOGRP&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2780%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2880%2Fannounce&tr=udp%3A%2F%2Ftracker.thinelephant.org%3A12710%2Fannounce&tr=udp%3A%2F%2Ftracker.slowcheetah.org%3A14730%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fcoppersurfer.tk%3A6969%2Fannounce" 
-          no_output_timeout: 3h
-
+            aria2c --seed-time=2.0 --file-allocation=none "magnet:?xt=urn:btih:EAE9C3ACC5125E140A38D351CEAF19A2340C0254&dn=Black.Widow.2021.2160p.DSNP.WEB-DL.DDP5.1.Atmos.DV.x265-MZABI&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2740%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2760%2Fannounce&tr=udp%3A%2F%2Ftracker.fatkhoala.org%3A13790%2Fannounce&tr=udp%3A%2F%2Ftracker.thinelephant.org%3A12740%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fcoppersurfer.tk%3A6969%2Fannounce" 
+          no_output_timeout: 5h
+  ipfs:
+    docker:
+      - image: cimg/node:16.6.2
+    steps:    
       - run:
+          name: install ipfs
           command: |
-            w3 token --api 'https://api.web3.storage' --token $STABLE_WEB3_STORAGE_TOKEN
-            w3 put ./vid
-          no_output_timeout: 3h
+            wget https://dist.ipfs.io/go-ipfs/v0.9.0/go-ipfs_v0.9.0_linux-amd64.tar.gz
+            tar -xvzf go-ipfs_v0.9.0_linux-amd64.tar.gz
+            cd go-ipfs
+            sudo bash install.sh
+            ipfs --version
+            
+      - run: ipfs init
+   
+      - run: 
+          name: add and export
+          command: |
+            CID=$(ipfs add --cid-version 1 --quieter --recursive --trickle ./vid)
+            echo "CID = ${CID}"
+            ipfs dag export --progress=false -- ${CID} > vid.car
+          no_output_timeout: 5h
+      
+      - store_artifacts: 
+          path: vid.car
+          
+#       - run:
+#           command: |
+#             w3 token --api 'https://api-staging.web3.storage' --token $WEB3_STORAGE_TOKEN 
+#             w3 put ./vid
+#           no_output_timeout: 3h
+workflows:
+  all:
+    jobs:
+    - download
+    - ipfs
