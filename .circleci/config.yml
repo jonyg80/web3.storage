@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs: 
-  download:
+  build:
     docker:
       - image: cimg/node:16.6.2
       
