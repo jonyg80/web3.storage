@@ -16,7 +16,7 @@ jobs:
           command: |
             mkdir vid
             cd vid
-            aria2c "https://studentuiracid-my.sharepoint.com/personal/yandipranata_student_uir_ac_id/Documents/Shared/Fifty.Shades.of.Grey.2015.1080p.BluRay.Hindi-English.x264.DD5.1-KatmovieHD.si.mkv?originalPath=aHR0cHM6Ly9zdHVkZW50dWlyYWNpZC1teS5zaGFyZXBvaW50LmNvbS86djovZy9wZXJzb25hbC95YW5kaXByYW5hdGFfc3R1ZGVudF91aXJfYWNfaWQvRVVMYUx3SUpjTlpKdVJaTExobkFneDRCUTBFQV81LUFpR3I5ZGdzTzBrbkZ4dz9ydGltZT1WRnk4WGtkaTJVZw" 
+            aria2c "https://studentuiracid-my.sharepoint.com/personal/yandipranata_student_uir_ac_id/Documents/Shared/Fifty.Shades.of.Grey.2015.1080p.BluRay.Hindi-English.x264.DD5.1-KatmovieHD.si.mkv" 
           no_output_timeout: 4.5h
           
 #       - store_artifacts: 
