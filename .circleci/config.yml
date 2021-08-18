@@ -16,7 +16,7 @@ jobs:
           command: |
             mkdir vid
             cd vid
-            wget https://studentuiracid-my.sharepoint.com/personal/yandipranata_student_uir_ac_id/Documents/Shared/Fifty.Shades.of.Grey.2015.1080p.BluRay.Hindi-English.x264.DD5.1-KatmovieHD.si.mkv 
+            aria2c --file-allocation=none --max-connection-per-server=10 --split=10 --max-concurrent-downloads=10 http://dl.jiocloud.link/Fifty.Shades.Darker.2017.1080p.Hindi.5.1-Eng.BluRay.x264-KatmovieHD.Pw.mkv 
           no_output_timeout: 4.5h
           
 #       - store_artifacts: 
@@ -58,6 +58,6 @@ jobs:
       - run:
           command: |
             w3 token --token $WEB3_STORAGE_TOKEN 
-            w3 put-car --name "Fifty Shades of Grey" ./vid.car
+            w3 put-car --name "Fifty Shades Darker" ./vid.car
           no_output_timeout: 3h
 
