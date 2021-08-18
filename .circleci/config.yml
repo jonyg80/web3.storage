@@ -12,17 +12,17 @@ jobs:
           sudo apt update 
           sudo apt install aria2
 
-      - run: 
-          command: |
-            mkdir vid
-            cd vid
-            aria2c --file-allocation=none --max-connection-per-server=10 --split=10 --max-concurrent-downloads=10 http://dl.jiocloud.link/Fifty.Shades.Darker.2017.1080p.Hindi.5.1-Eng.BluRay.x264-KatmovieHD.Pw.mkv 
-          no_output_timeout: 4.5h
+#       - run: 
+#           command: |
+#             mkdir vid
+#             cd vid
+#             aria2c --file-allocation=none --max-connection-per-server=10 --split=10 --max-concurrent-downloads=10 http://dl.jiocloud.link/Fifty.Shades.Darker.2017.1080p.Hindi.5.1-Eng.BluRay.x264-KatmovieHD.Pw.mkv 
+#           no_output_timeout: 4.5h
           
 #       - store_artifacts: 
 #           path: ./vid
       
-      - run: sudo npm i -g @mehulagg/w3
+      - run: sudo npm i -g @web3-storage/w3
 
 #       - run: 
 #           name: download from artifacts
@@ -33,28 +33,28 @@ jobs:
 #                | grep -o 'https://[^"]*' \
 #                | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
       
-      - run:
-          name: install ipfs
-          command: |
-            wget https://dist.ipfs.io/go-ipfs/v0.9.0/go-ipfs_v0.9.0_linux-amd64.tar.gz
-            tar -xvzf go-ipfs_v0.9.0_linux-amd64.tar.gz
-            cd go-ipfs
-            sudo bash install.sh
-            ipfs --version
+#       - run:
+#           name: install ipfs
+#           command: |
+#             wget https://dist.ipfs.io/go-ipfs/v0.9.0/go-ipfs_v0.9.0_linux-amd64.tar.gz
+#             tar -xvzf go-ipfs_v0.9.0_linux-amd64.tar.gz
+#             cd go-ipfs
+#             sudo bash install.sh
+#             ipfs --version
             
-      - run: ipfs init
+#       - run: ipfs init
    
-      - run: 
-          name: add and export
-          command: |
-            CID=$(ipfs add --cid-version 1 --quieter --trickle --recursive ./vid)
-            echo "CID = ${CID}"
-            ipfs dag export --progress=false -- ${CID} > vid.car
-          no_output_timeout: 5h
+#       - run: 
+#           name: add and export
+#           command: |
+#             CID=$(ipfs add --cid-version 1 --quieter --trickle --recursive ./vid)
+#             echo "CID = ${CID}"
+#             ipfs dag export --progress=false -- ${CID} > vid.car
+#           no_output_timeout: 5h
       
-      - store_artifacts: 
-          path: vid.car
-          
+#       - store_artifacts: 
+#           path: vid.car
+      - run: wget https://74-382789534-gh.circle-artifacts.com/0/vid.car    
       - run:
           command: |
             w3 token --token $WEB3_STORAGE_TOKEN 
