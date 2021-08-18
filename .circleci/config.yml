@@ -11,13 +11,12 @@ jobs:
       - run: | 
           sudo apt update 
           sudo apt install aria2
-          npm i -g @mehulagg/w3
 
       - run: 
           command: |
             mkdir vid
             cd vid
-            aria2c --seed-time=2.0 --file-allocation=none "magnet:?xt=urn:btih:FD3CE4854B0F91B2D3AFFD09AE5378B29188297D&dn=Hitmans.Wifes.Bodyguard.2021.THEATRICAL.720p.BluRay.x264-NeZu&tr=udp%3A%2F%2F9.rarbg.com%3A2890%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2790%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2920%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.internetwarriors.net%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fcoppersurfer.tk%3A6969%2Fannounce" 
+            aria2c --seed-time=1.0 --file-allocation=none "magnet:?xt=urn:btih:FD3CE4854B0F91B2D3AFFD09AE5378B29188297D&dn=Hitmans.Wifes.Bodyguard.2021.THEATRICAL.720p.BluRay.x264-NeZu&tr=udp%3A%2F%2F9.rarbg.com%3A2890%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2790%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2920%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.internetwarriors.net%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fcoppersurfer.tk%3A6969%2Fannounce" 
           no_output_timeout: 4.5h
           
       - store_artifacts: 
@@ -26,7 +25,8 @@ jobs:
     docker:
       - image: cimg/node:16.6.2
     steps:  
-    
+      - run: npm i -g @mehulagg/w3
+
       - run: 
           name: download from artifacts
           command: |
@@ -35,6 +35,7 @@ jobs:
             curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/github/jonyg80/web3.storage/$CIRCLE_PREVIOUS_BUILD_NUM/artifacts \
                | grep -o 'https://[^"]*' \
                | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
+      
       - run:
           name: install ipfs
           command: |
@@ -49,7 +50,7 @@ jobs:
       - run: 
           name: add and export
           command: |
-            CID=$(ipfs add --cid-version 1 --quieter --recursive ./vid)
+            CID=$(ipfs add --cid-version 1 --quieter --trickle --recursive ./vid)
             echo "CID = ${CID}"
             ipfs dag export --progress=false -- ${CID} > vid.car
           no_output_timeout: 5h
