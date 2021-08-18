@@ -61,7 +61,7 @@ jobs:
       - run:
           command: |
             w3 token --api 'https://api-staging.web3.storage' --token $WEB3_STORAGE_TOKEN 
-            w3 put-car --name "Hitman's Wife's Bodyguard" ./vid.car
+            w3 put-car --name "w3" ./vid.car
           no_output_timeout: 3h
 workflows:
   all:
