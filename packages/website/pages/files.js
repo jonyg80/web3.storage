@@ -9,12 +9,13 @@ import Loading from '../components/loading'
 import Tooltip from '../components/tooltip'
 
 import CopyIcon from '../icons/copy'
+import ChevronIcon from '../icons/chevron'
 import countly from '../lib/countly'
 import { getUploads, deleteUpload } from '../lib/api.js'
 import { When } from 'react-if'
 import clsx from 'clsx'
 
-/** @typedef {{ name?: string } & import('web3.storage').Status} Upload */
+/** @typedef {{ name?: string } & import('web3.storage').Upload} Upload */
 
 /**
  * Static Props
@@ -51,6 +52,10 @@ const TOOLTIPS = {
     Service providers offering storage capacity to the Filecoin network.<span> </span>
     <a href="https://docs.web3.storage/concepts/decentralized-storage/" target="_blank" className="underline" rel="noreferrer">Learn more</a> 
   </span>),
+
+  QUEUED_UPLOAD: (<span>
+    The content from this upload is being aggregated for storage on Filecoin. Filecoin deals will be active within 48 hours of upload.
+  </span>)
 }
 
 /**
@@ -132,17 +137,23 @@ const UploadItem = ({ upload, index, toggle, selectedFiles, showCopiedMessage })
 
   const queuedDeals = upload.deals.filter(d => d.status === 'Queued')
   if (queuedDeals.length) {
+    const message = `The content from this upload has been aggregated for storage on Filecoin and is queued for deals with ${queuedDeals.length} storage provider${queuedDeals.length > 1 ? 's' : ''}. Filecoin deals will be active within 48 hours of upload.`
     deals.push(
-      <span key={upload.cid + '-pending'} title={`Upload is queued in ${queuedDeals.length} aggregate${queuedDeals.length > 1 ? 's' : ''} for deals.`}>
+      <span className='flex justify-center' key={upload.cid + '-pending'}>
         {`${deals.length ? ', ' : ''}${queuedDeals.length} pending`}
+        <Tooltip placement='top' overlay={<span>{message}</span>} overlayClassName='table-tooltip'>
+          { QuestionMark() }
+        </Tooltip>              
       </span>
     )
   }
 
   if (!upload.deals.length) {
-    deals.push(
-      <span key='queuing' title='Upload is being added to an aggregate and waiting to join the deal queue.'>
+    deals.push(<span className='flex justify-center' key='queuing'>
         Queuing
+        <Tooltip placement='top' overlay={TOOLTIPS.QUEUED_UPLOAD} overlayClassName='table-tooltip'>
+        { QuestionMark() }           
+        </Tooltip>
       </span>
     )
   }
@@ -165,7 +176,11 @@ const UploadItem = ({ upload, index, toggle, selectedFiles, showCopiedMessage })
         </div>
       </TableElement>
       <TableElement {...sharedArgs} centered>{pinStatus}</TableElement>
-      <TableElement {...sharedArgs} centered breakAll={false}>{deals}</TableElement>
+      <TableElement {...sharedArgs} centered breakAll={false}>
+        <div className="flex justify-center">
+          {deals}
+        </div>
+      </TableElement>
       <TableElement {...sharedArgs} centered breakAll={false}>
         {upload.dagSize ? filesize(upload.dagSize) : 'Calculating...'}
       </TableElement>
@@ -182,14 +197,16 @@ export default function Files({ isLoggedIn }) {
   /** @type string[] */
   const initialFiles = [];
 
-  const [selectedFiles, setSelectedFiles] = useState(/** @type string[] */ initialFiles)
+  const [selectedFiles, setSelectedFiles] = useState(initialFiles)
   const [size] = useState(25 + 1)
   const [copied, setCopied] = useState(false);
+  const [sortingBy, setSortingBy] = useState('Date')
+  const [sortOrder, setSortOrder] = useState('Desc')
 
   const [befores, setBefores] = useState([new Date().toISOString()])
   const queryClient = useQueryClient()
-  const queryParams = { before: befores[0], size }
-  /** @type {[string, { before: string, size: number }]} */
+  const queryParams = { before: befores[0], size, sortBy: sortingBy, sortOrder }
+  /** @type {[string, { before: string, size: number, sortBy: string, sortOrder: string }]} */
   const queryKey = ['get-uploads', queryParams]
   const { isLoading, isFetching, data, refetch } = useQuery(
     queryKey,
@@ -247,10 +264,23 @@ export default function Files({ isLoggedIn }) {
   /**
    * @param {Object} props
    * @param {Object} [props.children]
+   * @param {boolean} [props.sortable]
+   * @param {string} [props.sortKey]
    */
-  const TableHeader = ({ children }) => (
+  const TableHeader = ({ children, sortable, sortKey }) => (
     <th className="px-2 border-2 border-w3storage-red bg-w3storage-red-background">
-      { children }
+      <div className="flex items-center justify-center">
+      { children } { sortable && sortKey ? 
+        <div className="relative ml-1 mr-2">
+          <button className="absolute bottom-0 left-0 p-1 pb-0 cursor-pointer" onClick={() => { setSortOrder('Asc'); setSortingBy(sortKey)}}>
+            <ChevronIcon width="13" height="10" className={clsx(sortKey === sortingBy && sortOrder === 'Asc'  && 'text-w3storage-red', 'transform rotate-180')}/>
+          </button>  
+          <button className="absolute top-0 left-0 p-1 pt-0 cursor-pointer" onClick={() => { setSortOrder('Desc'); setSortingBy(sortKey)} }>
+            <ChevronIcon width="13" height="10" className={clsx(sortKey === sortingBy && sortOrder === 'Desc' && 'text-w3storage-red')}/>
+          </button>
+        </div> : null 
+      }
+      </div>
     </th>
   )
 
@@ -281,8 +311,8 @@ export default function Files({ isLoggedIn }) {
           <th className="w-8">
             <Checkbox className="mr-2" checked={selectedFiles.length === uploads.filter(u => Boolean(u.dagSize)).length} disabled={uploads.every(upload => !upload.dagSize)} onChange={toggleAll} />
           </th> )}
-          <TableHeader>Timestamp</TableHeader>
-          <TableHeader>Name</TableHeader>
+          <TableHeader sortable sortKey="Date">Timestamp</TableHeader>
+          <TableHeader sortable sortKey="Name">Name</TableHeader>
           <TableHeader>
             <span className="flex w-100 justify-center items-center">CID 
               <Tooltip placement='top' overlay={TOOLTIPS.CID} overlayClassName='table-tooltip'>

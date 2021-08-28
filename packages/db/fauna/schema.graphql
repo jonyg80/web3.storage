@@ -201,6 +201,21 @@ type PinRequest {
 }
 
 """
+A request to keep a Pin in sync with the nodes that are pinning it.
+"""
+type PinSyncRequest {
+  """
+  The pin to keep in sync.
+  """
+  pin: Pin! @relation
+
+  """
+  When the PinSyncRequest was created.
+  """
+  created: Time!
+}
+
+"""
 An upload created by a user.
 """
 type Upload {
@@ -367,6 +382,16 @@ enum DealStatus {
   Terminated
 }
 
+enum SortDirection {
+  Asc
+  Desc
+}
+
+enum UploadListSortBy {
+  Date,
+  Name
+}
+
 type Metric {
   """
   Unique key identifying the metric.
@@ -387,7 +412,7 @@ type Query {
   Find all uploads created after a given date. Note: this INCLUDES deleted uploads.
   """
   findUploadsCreatedAfter(since: Time!): [Upload!]! @resolver(paginated: true)
-  findUploadsByUser(where: FindUploadsByUserInput!): [Upload!]! @resolver(paginated: true)
+  findUploadsByUser(where: FindUploadsByUserInput!, sortBy: UploadListSortBy, sortOrder: SortDirection): [Upload!]! @resolver(paginated: true)
   findContentByCid(cid: String!): Content @resolver
   findContentByCreated(from: Time!, to: Time): [Content!]! @resolver(paginated: true)
   findUserByIssuer(issuer: String!): User @resolver
@@ -396,7 +421,8 @@ type Query {
   Verify the User with the passed issuer owns the AuthToken with the passed secret.
   """
   verifyAuthToken(issuer: String!, secret: String!): AuthToken @resolver
-  findPinsByStatus(statuses: [PinStatus!]!): [Pin!]! @resolver(paginated: true)
+  findPinsByStatus(status: PinStatus!): [Pin!]! @resolver(paginated: true)
+  findPinsByStatusAndCreated(status: PinStatus!, from: Time!, to: Time): [Pin!]! @resolver(paginated: true)
   findAllPinRequests: [PinRequest!]! @resolver(paginated: true)
   findUsersByCreated(from: Time!, to: Time): [User!]! @resolver(paginated: true)
   countUsers(from: Time!, to: Time): [Long]! @resolver(paginated: true)
@@ -407,6 +433,7 @@ type Query {
   sumContentDagSize(from: Time!, to: Time): [Long]! @resolver(paginated: true)
   sumPinDagSize(from: Time!, to: Time): [Long]! @resolver(paginated: true)
   findMetricByKey(key: String!): Metric @resolver
+  findPinSyncRequests(from: Time, to: Time): [PinSyncRequest!]! @resolver(paginated: true)
 }
 
 type Mutation {
@@ -428,10 +455,13 @@ type Mutation {
   createOrUpdatePin(data: CreateOrUpdatePinInput): Pin! @resolver
   updateContentDagSize(content: ID!, dagSize: Long!): Content! @resolver
   createPinRequest(cid: String!): PinRequest! @resolver
+  deletePinRequests(requests: [ID!]!): [PinRequest!]! @resolver
   incrementPinRequestAttempts(pinRequest: ID!): PinRequest! @resolver
   incrementUserUsedStorage(user: ID!, amount: Long!): User! @resolver
   createOrUpdateMetric(data: CreateOrUpdateMetricInput!): Metric! @resolver
   updatePins(pins: [UpdatePinInput!]!): [Pin!]! @resolver
+  createPinSyncRequests(pins: [ID!]!): [PinSyncRequest!]! @resolver
+  deletePinSyncRequests(requests: [ID!]!): [PinSyncRequest!]! @resolver
 }
 
 input CreateAggregateInput {
