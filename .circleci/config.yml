@@ -4,14 +4,23 @@ jobs:
     docker:
       - image: cimg/python:3.9.6
     steps: 
-      - checkout # check out the code in the project directory
-      - run: | 
-          sudo curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
-          sudo chmod a+rx /usr/local/bin/youtube-dl 
+      # - checkout # check out the code in the project directory
+
+      - run:
+          name: install nodejs
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+      - run:
+          name: install youtube-dl 
+          command: | 
+            sudo curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
+            sudo chmod a+rx /usr/local/bin/youtube-dl 
           
       - run: | 
           sudo apt update 
-          sudo apt install aria2 ffmpeg wireguard python3 @web3-storage/w3
+          sudo apt install aria2 ffmpeg wireguard python3
+          sudo npm i -g @web3-storage/w3
       
 #       - run: |
 #           mkdir cloudflare
@@ -50,7 +59,7 @@ jobs:
       - run:
           no_output_timeout: 5h
           command: |
-            w3 token --token $WEB3_STORAGE_TOKEN 
+            w3 token --token $M_WEB3_STORAGE_TOKEN 
             w3 put-car --name "1-50" ./vid.car
 #       - store_artifacts:
 #           path: ./vid
