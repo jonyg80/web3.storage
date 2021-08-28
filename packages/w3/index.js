@@ -4,6 +4,7 @@ import enquirer from 'enquirer'
 import Conf from 'conf'
 import ora from 'ora'
 import fs from 'fs'
+import { CarIndexedReader } from '@ipld/car'
 
 const API = 'https://api.web3.storage'
 
@@ -139,6 +140,8 @@ export async function list (opts = {}) {
  * @param {string} [opts.api]
  * @param {string} [opts.token]
  * @param {string} [opts.wrap] wrap with directory
+ * @param {string} [opts.name] upload name
+ * @param {boolean} [opts.hidden] include paths that start with .
  * @param {boolean|number} [opts.retry] set maxRetries for client.put
  * @param {string[]} opts._ additonal paths to add
  */
@@ -152,14 +155,16 @@ export async function put (path, opts) {
   if (maxRetries !== undefined) {
     console.log(`⁂ maxRetries: ${maxRetries}`)
   }
+  const name = opts.name !== undefined ? opts.name : undefined
 
   const spinner = ora('Packing files').start()
   const paths = [path, ...opts._]
+  const hidden = !!opts.hidden
   const files = []
   let totalSize = 0
   let totalSent = 0
   for (const p of paths) {
-    for await (const file of filesFromPath(p)) {
+    for await (const file of filesFromPath(p, { hidden })) {
       totalSize += file.size
       files.push(file)
       spinner.text = `Packing ${files.length} file${files.length === 1 ? '' : 's'} (${filesize(totalSize)})`
@@ -169,6 +174,7 @@ export async function put (path, opts) {
 
   const root = await client.put(files, {
     maxRetries,
+    name,
     wrapWithDirectory: opts.wrap,
     onRootCidReady: (cid) => {
       rootCid = cid
@@ -186,6 +192,49 @@ export async function put (path, opts) {
     }
   })
   spinner.stopAndPersist({ symbol: '⁂', text: `Stored ${files.length} file${files.length === 1 ? '' : 's'}` })
+  console.log(`⁂ https://dweb.link/ipfs/${root}`)
+}
+
+/**
+ * Add CAR file to web3.storage
+ *
+ * @param {string} path the first file path to store
+ * @param {object} opts
+ * @param {string} [opts.api]
+ * @param {string} [opts.token]
+ * @param {string} [opts.name] upload name
+ * @param {boolean|number} [opts.retry] set maxRetries for client.putCar
+ */
+export async function putCar (path, opts) {
+  const client = getClient(opts)
+
+  // pass either --no-retry or --retry <number>
+  const maxRetries = Number.isInteger(Number(opts.retry))
+    ? Number(opts.retry)
+    : opts.retry === false ? 0 : undefined
+  if (maxRetries !== undefined) {
+    console.log(`⁂ maxRetries: ${maxRetries}`)
+  }
+  const name = opts.name !== undefined ? opts.name : undefined
+
+  let totalSent = 0
+  let totalSize = 0
+  const stats = fs.statSync(path)
+  totalSize = stats.size
+  const spinner = ora('storing').start()
+
+  const carReader = await CarIndexedReader.fromFile(path)
+
+  const root = await client.putCar(carReader, {
+    name,
+    maxRetries,
+
+    onStoredChunk: (size) => {
+      totalSent += size
+      spinner.text = `Storing ${Math.round((totalSent / totalSize) * 100)}%`
+    }
+  })
+  spinner.stopAndPersist({ symbol: '⁂', text: `Stored ${filesize(totalSize)}` })
   console.log(`⁂ https://dweb.link/ipfs/${root}`)
 }
 

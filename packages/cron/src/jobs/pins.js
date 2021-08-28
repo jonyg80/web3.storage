@@ -6,21 +6,24 @@ import { piggyback } from 'piggybacker'
 
 const log = debug('pins:updatePinStatuses')
 
-const FIND_PENDING_PINS = gql`
-  query FindPinsByStatus($after: String) {
-    findPinsByStatus(statuses: [Unpinned, PinQueued, Pinning], _size: 1000, _cursor: $after) {
+const FIND_PIN_SYNC_REQUESTS = gql`
+  query FindPinSyncRequests($to: Time, $after: String) {
+    findPinSyncRequests(to: $to, _size: 1000, _cursor: $after) {
       data {
         _id
-        content {
+        pin {
           _id
-          cid
-          dagSize
+          content {
+            _id
+            cid
+            dagSize
+          }
+          location {
+            peerId
+          }
+          status
+          created
         }
-        location {
-          peerId
-        }
-        status
-        created
       }
       after
     }
@@ -38,6 +41,22 @@ const UPDATE_PINS = gql`
 const UPDATE_CONTENT_DAG_SIZE = gql`
   mutation UpdateContentDagSize($content: ID!, $dagSize: Long!) {
     updateContentDagSize(content: $content, dagSize: $dagSize) {
+      _id
+    }
+  }
+`
+
+const DELETE_PIN_SYNC_REQUESTS = gql`
+  mutation DeletePinSyncRequests($requests: [ID!]!) {
+    deletePinSyncRequests(requests: $requests) {
+      _id
+    }
+  }
+`
+
+const CREATE_PIN_SYNC_REQUESTS = gql`
+  mutation CreatePinSyncRequests($pins: [ID!]!) {
+    createPinSyncRequests(pins: $pins) {
       _id
     }
   }
@@ -79,13 +98,18 @@ export async function updatePinStatuses ({ cluster, db, ipfs }) {
     cid => cid
   )
 
+  const to = new Date().toISOString()
   let queryRes, after
   let i = 0
   while (true) {
-    queryRes = await retry(() => db.query(FIND_PENDING_PINS, { after }))
-    log(`📥 Processing ${i} -> ${i + queryRes.findPinsByStatus.data.length}`)
+    queryRes = await retry(() => db.query(FIND_PIN_SYNC_REQUESTS, { to, after }), { onFailedAttempt: log })
+    const requests = queryRes.findPinSyncRequests.data
+    log(`📥 Processing ${i} -> ${i + requests.length}`)
+
     const checkDagSizePins = []
-    const pinUpdates = await Promise.all(queryRes.findPinsByStatus.data.map(async pin => {
+    const reSyncPins = []
+    let pinUpdates = await Promise.all(requests.map(async req => {
+      const { pin } = req
       const peerMap = await getPinStatus(pin.content.cid)
 
       if (!peerMap[pin.location.peerId]) {
@@ -93,6 +117,11 @@ export async function updatePinStatuses ({ cluster, db, ipfs }) {
       }
 
       const status = toPinStatusEnum(peerMap[pin.location.peerId].status)
+
+      if (status !== 'Pinned' && status !== 'Remote') {
+        reSyncPins.push(pin)
+      }
+
       if (status === pin.status) {
         log(`🙅 ${pin.content.cid}@${pin.location.peerId}: No status change (${status})`)
         return null
@@ -106,12 +135,31 @@ export async function updatePinStatuses ({ cluster, db, ipfs }) {
       log(`📌 ${pin.content.cid}@${pin.location.peerId}: ${pin.status} => ${status}`)
       return { pin: pin._id, status: status }
     }))
+    pinUpdates = pinUpdates.filter(Boolean)
 
-    log(`⏳ Updating ${pinUpdates.filter(Boolean).length} pins...`)
-    await retry(() => db.query(UPDATE_PINS, {
-      pins: pinUpdates.filter(Boolean)
-    }))
-    log('✅ Done')
+    log(`⏳ Updating ${pinUpdates.length} pins...`)
+    if (pinUpdates.length) {
+      await retry(() => db.query(UPDATE_PINS, {
+        pins: pinUpdates
+      }), { onFailedAttempt: log })
+    }
+    log(`✅ Updated ${pinUpdates.filter(Boolean).length} pins...`)
+
+    log(`⏳ Re-queuing ${reSyncPins.length} pin sync requests...`)
+    if (reSyncPins.length) {
+      await retry(() => db.query(CREATE_PIN_SYNC_REQUESTS, {
+        pins: reSyncPins.map(p => p._id)
+      }), { onFailedAttempt: log })
+    }
+    log(`✅ Re-queued ${reSyncPins.length} pin sync requests...`)
+
+    log(`⏳ Removing ${requests.length} pin sync requests...`)
+    if (requests.length) {
+      await retry(() => db.query(DELETE_PIN_SYNC_REQUESTS, {
+        requests: requests.map(r => r._id)
+      }), { onFailedAttempt: log })
+    }
+    log(`✅ Removed ${requests.length} pin sync requests...`)
 
     await Promise.all(checkDagSizePins.map(async pin => {
       log(`⏳ ${pin.content.cid}: Querying DAG size...`)
@@ -120,16 +168,16 @@ export async function updatePinStatuses ({ cluster, db, ipfs }) {
         // Note: this will timeout for large DAGs
         dagSize = await ipfs.dagSize(pin.content.cid, { timeout: 10 * 60000 })
         log(`🛄 ${pin.content.cid}@${pin.location.peerId}: ${dagSize} bytes`)
-        await retry(() => db.query(UPDATE_CONTENT_DAG_SIZE, { content: pin.content._id, dagSize }))
+        await retry(() => db.query(UPDATE_CONTENT_DAG_SIZE, { content: pin.content._id, dagSize }), { onFailedAttempt: log })
       } catch (err) {
         log(`💥 ${pin.content.cid}@${pin.location.peerId}: Failed to update DAG size`)
         log(err)
       }
     }))
 
-    after = queryRes.findPinsByStatus.after
+    after = queryRes.findPinSyncRequests.after
     if (!after) break
-    i += queryRes.findPinsByStatus.data.length
+    i += requests.length
   }
   log('🎉 Done')
 }

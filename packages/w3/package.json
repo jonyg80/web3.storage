@@ -1,6 +1,6 @@
 {
   "name": "@web3-storage/w3",
-  "version": "2.2.0",
+  "version": "2.4.0",
   "description": "The CLI to save your things in web3.storage ⁂",
   "type": "module",
   "bin": {
@@ -23,9 +23,10 @@
   },
   "homepage": "https://web3.storage",
   "dependencies": {
+    "@ipld/car": "^3.1.16",
     "conf": "^10.0.1",
     "enquirer": "^2.3.6",
-    "ipfs-car": "^0.5.3",
+    "ipfs-car": "^0.5.8",
     "ora": "^5.4.1",
     "sade": "^1.7.4",
     "web3.storage": "^3.0.0"
