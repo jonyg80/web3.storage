@@ -25,7 +25,7 @@ jobs:
       - run: | 
           mkdir vid
           cd vid
-          youtube-dl -i --playlist-start=151 --playlist-end=200 --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${URL}"
+          youtube-dl -i --playlist-start=201 --playlist-end=250 --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${URL}"
       
       - run:
           name: install ipfs
@@ -50,7 +50,7 @@ jobs:
           no_output_timeout: 5h
           command: |
             w3 token --token $M_WEB3_STORAGE_TOKEN 
-            w3 put-car --name "151-200" ./vid.car
+            w3 put-car --name "201-250" ./vid.car
 #       - store_artifacts:
 #           path: ./vid
 #           destination: mv_y_451-500
