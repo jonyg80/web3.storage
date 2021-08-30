@@ -4,8 +4,8 @@ jobs:
     docker:
       - image: cimg/python:3.9.6
     environment:
-      START: "351"
-      END: "400"
+      START: "401"
+      END: "450"
     steps: 
       # - checkout # check out the code in the project directory
 
@@ -23,7 +23,7 @@ jobs:
       - run: | 
           sudo apt update 
           sudo apt install aria2 ffmpeg wireguard python3
-          sudo npm i -g @web3-storage/w3
+          sudo npm i -g @mehulagg/w3
           
       - run: | 
           mkdir vid
