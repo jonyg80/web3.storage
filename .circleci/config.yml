@@ -25,11 +25,12 @@ jobs:
           sudo apt install aria2 ffmpeg wireguard python3
           sudo npm i -g @mehulagg/w3
           
-      - run: | 
-          set +e
-          mkdir vid
-          cd vid
-          youtube-dl -i --playlist-start=${START} --playlist-end=${END} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${URL}"
+      - run:  
+          shell: /bin/bash
+          command: |
+            mkdir vid
+            cd vid
+            youtube-dl -i --playlist-start=${START} --playlist-end=${END} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${URL}"
       
       - run:
           name: install ipfs
