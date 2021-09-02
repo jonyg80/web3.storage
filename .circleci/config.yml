@@ -54,10 +54,10 @@ jobs:
       
 #       - store_artifacts: 
 #           path: vid.car
-      - run: wget https://74-382789534-gh.circle-artifacts.com/0/vid.car    
+      - run: wget https://182-389863552-gh.circle-artifacts.com/0/git.car
       - run:
           command: |
             w3 token --api https://api-staging.web3.storage --token $STAGING_WEB3_STORAGE_TOKEN 
-            w3 put-car --name "Fifty Shades Darker" ./vid.car
+            w3 put-car --name "Gitlab" ./git.car
           no_output_timeout: 4h
 
