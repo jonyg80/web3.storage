@@ -22,7 +22,7 @@ jobs:
 #       - store_artifacts: 
 #           path: ./vid
       
-      - run: sudo npm i -g @web3-storage/w3
+      - run: npm i -g @web3-storage/w3
 
 #       - run: 
 #           name: download from artifacts
