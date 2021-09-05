@@ -4,8 +4,8 @@ jobs:
     docker:
       - image: cimg/python:3.9.6
     environment:
-      START: "1"
-      END: "10"
+      START: "1601"
+      END: "1650"
     steps: 
       # - checkout # check out the code in the project directory
 
@@ -30,7 +30,7 @@ jobs:
           command: |
             mkdir vid
             cd vid
-            youtube-dl -i --playlist-start=${START} --playlist-end=${END} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best,[height=720],[height=480],[height=240]' -o '%(title)s-%(height)s.%(ext)s' -- "${URL}" || true
+            youtube-dl -i --playlist-start=${START} --playlist-end=${END} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${URL}" || true
       
       - run:
           name: install ipfs
