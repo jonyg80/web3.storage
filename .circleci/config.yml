@@ -4,8 +4,8 @@ jobs:
     docker:
       - image: cimg/python:3.9.6
     environment:
-      START: "1601"
-      END: "1650"
+      START: "1651"
+      END: "1700"
     steps: 
       # - checkout # check out the code in the project directory
 
@@ -55,7 +55,7 @@ jobs:
           no_output_timeout: 5h
           command: |
             w3 token --token $M_WEB3_STORAGE_TOKEN 
-            w3 put-car --name "Y F ${START}-${END}" ./vid.car
+            w3 put-car --name "${START}-${END}" ./vid.car
 #       - store_artifacts:
 #           path: ./vid
 #           destination: mv_y_451-500
