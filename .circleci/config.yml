@@ -28,10 +28,10 @@ jobs:
       - run:  
           shell: /bin/bash
           command: |
-            mkdir vid
-            cd vid
             START=$(cat num.txt)
             END=$(($(cat num.txt) + 49))
+            mkdir vid
+            cd vid
             youtube-dl -i --playlist-start=${START} --playlist-end=${END} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${URL}" || true
       
       - run:
