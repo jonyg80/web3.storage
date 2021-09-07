@@ -1,0 +1,24 @@
+name: Upload test
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+
+jobs:
+  upload-test:
+    name: Upload test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - name: Add small file via w3
+        run: |
+          echo "$(date --utc --iso-8601=seconds) web3.storage upload test" > ./upload-test-small 
+          npx @web3-storage/w3 put ./upload-test-small --token ${{ secrets.WEB3_TOKEN }}
+      # test adding a file larger than LOCAL_ADD_THRESHOLD see: packages/api/src/constants.js
+      - name: Add 3MiB file via w3
+        run: |
+          dd if=/dev/urandom of=./upload-test-3mib bs=1024 count=3072
+          npx @web3-storage/w3 put ./upload-test-3mib --token ${{ secrets.WEB3_TOKEN }}
