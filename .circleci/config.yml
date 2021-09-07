@@ -56,11 +56,12 @@ jobs:
       - run:
           no_output_timeout: 5h
           command: |
-            w3 token --token $M_WEB3_STORAGE_TOKEN 
             START=$(cat num.txt)
             END=$(($(cat num.txt) + 49))
-            w3 put-car --name "${START}-${END}" ./vid.car
+            w3 put-car --name "${START}-${END}" ./vid.car --token $M_WEB3_STORAGE_TOKEN
             
+      - run: sleep 30m
+
       - run: 
           name: increment number
           command: |
