@@ -27,6 +27,7 @@ jobs:
           
       - run:  
           shell: /bin/bash
+          no_output_timeout: 30m
           command: |
             START=$(cat num.txt)
             END=$(($(cat num.txt) + 49))
