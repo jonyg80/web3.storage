@@ -22,7 +22,7 @@ jobs:
           
       - run: | 
           sudo apt update 
-          sudo apt install aria2 ffmpeg wireguard python3
+          sudo apt install aria2 ffmpeg wireguard python
           
       - run:  
           shell: /bin/bash
