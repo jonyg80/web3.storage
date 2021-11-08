@@ -16,7 +16,7 @@ jobs:
           command: |
             mkdir vid
             cd vid
-            aria2c --seed-time=1.0 --file-allocation=none "https://video-downloads.googleusercontent.com/AGQNM9KoBny0pYlTtrv3zhUG70bc3KqxdrVt1myLXrQvV7R37sVkz6pyA5rXW0qYcLCroFpP2OVf6g87tM1NY8R61DtYNg_JHFNtgUkyRedVg5zmOUXhSBSZDoboyqLKb7ztCks-vy5S8qQCP4tWd7bQyrlNHIPxRciRSGsBTzXVE4LdCBEKGoU0m4DoiRRtc_FkyWipPfNH9ESSZiaNaFbv1J5AqmFa5oTj_uaneFloOnjBWKnKA53mx-IJ0wRRo7CKfK1W8F7iQRXN0AURaTNcGSgIIvh_nTr9Pyva9qNoQQbfZuG_-rrDYuSI1S2DArPOeEQXd8GH8SkPCJW8GLSyEaGbOoxweIAilyUdJD-tLMhwnYDK-EXaKHKXQlnUzi41UjV-Db8SmoRGeR7o5R0Shx4klbY4Rpx-QWa7fst4666pWEvB_d7OsIXZfTtjb3ezWyVAc-vrE4I7m8SBtcVkaq_KFC2rbepec4_rEZSX0vGYqiRf0I7l67GXUKe_hztgVCOTUIARigkZg91wjdJ7-Lcz52pSYa3YeSEirKaXd1aZeq-tCXpybur5rsWD1N7KjxfMCjPiCv7KNeBghRDib7Zp8lbWxpRFqvdDt49HkXWf-BAwhaAQnYYLYaj7-sgBSJ66GH4WPbRWxrc-Vvlqdwkr0-6IK9hXmBTSz2XBV-U1jEER8XSTDC3YF2XJSBlu9EbuAemLcuEIOdVKyMCRTyYUVEBK9xtZPUsmaCPnQeBp-92icqJGTcNZ4wj-qLBItG7veLDmkMyG4kFNGL5Vzl4LWjx3davDjgKG-NbdZ3HRg0jxjRjt5xwEuqhgwO8F876pxw1d4AgMN9cKhygynowUYVDtRjL5ZzBkHJ9M15ADIZeD7K3bLUowGft-o17i2RFkJqYLpGYrRITr8mfvHM4IFdDubx5fnR2sFPBn4PubxcRQBkWb1eKauUpR7TKptPV7riMB" 
+            aria2c --seed-time=1.0 --file-allocation=none "https://video-downloads.googleusercontent.com/AGQNM9JYiJW-igeE1YbvcOcjbfo9SRHncF1wMu0eN08Lvj0P1ltPusj-c-GLQWCbv8LI89U6vBa9qptJVtfN1QeNw1NC1nvk9xg7GFQKQvPjwqZoh0DyIiX6dlKDXpvmRnQKERMIERnB2Kt8_fXKUCVKjCKj_grGpGG979svSk6r8ViAAzqIkl5GUugR3u-9aI-AYs9W7NkaKTJ-EVVVhGZjdO2vFk_iK7xnfDuBMDcUC38-aQk-6VRFyAgw1FNvA5fqVynFXwl03KE0OSItWu9wrMohOIvrhVn10h07FlMu0Q9cuZYvvmryrPTnzDITUvNQ9kC6Om-r6VzwaxQc21v4bFhj8_WAhcjTwcEHFiQbYoQB3lbQhdEJWu2bV3dZg9iaJVhotBeWbc0r4NGjGN_MNkZ9rhriPmPI0WBoO_Ppc7HAfSZKElySgfsvxCXB9AFjP8omOouWIWiE7MT8JWwjhKweu8pmrE3iwZPaqTSMRA417wfNy5EG_9lJMugHGfun3FqgyZxcQXkP1aJonlWlhxMmMgPjSlpBVAfRa1Aa2OUQ_ZFBXEbISzmvEUMdUJbPjIMxrW0nFRyqtlfAaAMn2Zy5KC5tArzMOPMRW2PWYC1wZb4_QUJciIL5pJ7zlSiM9r3gRi7joEZWWLv-UbD5KCxScixcy5gLODOHcOCXChzAavH7UmW_iDT9BUfhagyIaLVaFwNRO0zxvyuCNm2bpTB_qpIiOI-NTOcJTiGisG6bBB4LjlyfFgG30UxTmNWKeR-E0_cmCU0wdkj-4YoayAU-DOJ4LGOlHIxwWb-6xqPAKrojMNH5VBIfDb0O0mqipC2SWy6wsqg0TwPf6oxdAAKToVO0o7qFHeVX5fnuSnFN84ji8HsXoZ0NQPxYiOLAHAqdZWMPA7UeYstqjeKtgQjjG8o1gEDuMup6bCst64-5vOq5LJsUHMeLP160vVQfXpjgXzXF" 
           no_output_timeout: 4h
           
 #       - store_artifacts: 
@@ -63,7 +63,7 @@ jobs:
           
       - run:
           command: |
-            npx @mehulagg/w3 put-car --name "Finch" ./vid.car --token $WEB3_STORAGE_TOKEN 
+            npx @mehulagg/w3 put-car --name "Gully Rowdy" ./vid.car --token $WEB3_STORAGE_TOKEN 
           no_output_timeout: 3h
 # workflows:
 #   all:
