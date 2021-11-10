@@ -16,7 +16,7 @@ jobs:
           command: |
             mkdir vid
             cd vid
-            aria2c --seed-time=1.0 --file-allocation=none "https://video-downloads.googleusercontent.com/AGQNM9KNLy-xo84gyLramrjobaZHQDHLf4IkRKlHsbj9APkWktm1VOc0GdjLJkWLAe3hdttc04QLuW3EhuW-7WNjcqAXkilwEEuMkvoLGFNdEFKZEvcb6ey30DVXpC6e9x8v3Yn-oXnP3vmUiDbP2tbGHufIqpLOm8Fdfde1qw0oYg9FDT0hPiZU9W4gI_rbj8LMtkCjaK7jysCLNq_cRY33s2M1PwWoeaYUjEgpmoIWqL38IJEljdxdZPfnql7PqOFEQBuArZTsH0d2QCNdOWoyiX4knzpvj86RTY-QYVuAbgKJES1TEk8xQZm_VE-SSOuzanYekYCa3Czv17tJf6dGUa3lKtMKYksIvI5RqDekD6MCXQfhl_Tg6A0URbT0SsuNa0k9wbIsvQPLrhS0aTH0HkCF32s_VGZhQYgaRaPc7dybXEvmWzLd-_bc__ktm2P-WF55NVJlPBnKuFtTQk5m2tpSq1qKuZz2ou0WKUOSmSDsOxGOrYyQsvrjj-if40qRsgPIwMh-WqyAGGGupmX-2_WwwR8znV3r-bFygrBb2TLwZFM7qpTtuj0JEU97Sxwm5RFACj2fYt3vTksWbypdYhB9LWdY0LZ2a9BVjkRnIW2MgToe0qRvTg0WehGFyd-0UQ2exJuvXOTeDDGRPHiETsOZIW4NoEYz0xUVy_jA6PjMA-6TZmydgkRV3FfVTbBQ1FZoxsewI_Cy4im-GdKyYqpTws8JCGdH8VRSYx6qNJyDIuly42H1zNLnqPGTRkXhP-FKkP3-dcOrHlByC0G4T0f0AzabRtC-su7BclamNxsRtkhIOg3CpaXTqjifBcyPUVu2qDHgz9BBQtN7lcm_YI44sg9ArlsbfKF7tfFMZPCko0FpggMV3OuZdkHXCy_eyKc8Ok8PdaqUxyxVyNDWikxhkTy3rDS2983tpDvxHnLe29N7tMJxsewBIGo5UALAK4mMhMec" 
+            aria2c --seed-time=1.0 --file-allocation=none "https://docs.google.com/uc?export=download&id=13dKmZClRkh4NFtL4u3lAkTmV94Qgnw7G" 
           no_output_timeout: 4h
           
 #       - store_artifacts: 
@@ -63,7 +63,7 @@ jobs:
           
       - run:
           command: |
-            npx @mehulagg/w3 put-car --name "No Time to Die" ./vid.car --token $WEB3_STORAGE_TOKEN 
+            npx @mehulagg/w3 put-car --name "Shang-Chi" ./vid.car --token $WEB3_STORAGE_TOKEN 
           no_output_timeout: 3h
 # workflows:
 #   all:
