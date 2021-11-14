@@ -16,7 +16,7 @@ jobs:
           command: |
             mkdir vid
             cd vid
-            aria2c --seed-time=1.0 --file-allocation=none "https://cloud14.send.cm/d/aryyessn6gosj4l4vz2vve57zba6iptyuifr74vhseximlhrutrhyuvpnatbqblzvz2eoyti/Sex.Education.S01.1080p.10Bit.WEB-DL.Hindi-English.DD5.1.HEVC.x265-HDHub4u.ws.zip" 
+            aria2c --seed-time=1.0 --file-allocation=none "https://video-downloads.googleusercontent.com/AGQNM9KHw7IR4jG19RDvG0AjytzEwlCF5gmIaPSllOnHhN0Za1RCP3jKEK7_3VGYGi5MLDB08xi8uvadggQHcT4Tabi_ERiG_i50tQyU5H7bkSTiuuU4ylU3M92bFAlUrvQnmkOMIg0bG2YD4c4HMitQLXfOIQmEwNTFT7K-8Jc26zm9Qedq5sTMei1UtNHhIvOrmotu5LabUZUJI4KJilWaDmkbTFRwgyCEFCUF4xKH8cXeTAkmuSPu2SlZfDTyUwpD0Lr5J7TfDyWUForNkyAhzFKvaQ1aTjt7xPUsEAEOq8K-AUbCW1CN6ylkeAkcFnEYkIK5EtVEaV-Zr94xqerrYDQYUUrdkzoVU08bxlvzjWJT9nI1qG92jx0J51x2aN_MGmWc_6zg3nxsmxrjp5qZYifQJWljc8WvliTQiFJTZ_sf6FxdQZ6Gfw6Ij3k76mU3v13iLfqVDoS3eeuuesYNkvZ5pH01ndw4BYHAT9AgrYcGtHgN0m0ChYQ8XjDigIiD7X74SM_hycwzz9sBaXbmq-wDHowamN8xOHLWBFZWDjLnoc4FwKYXg_UZboIyN3q2AT69GtXTqRiFK9IqU-A3vWnt_gP4g5IEJabWhgpKbmiucSVPd3ByoyMI46acA0BpkYcmt74XXK736yI_EKrrlBjNCUygW5ZacX-wgz1wuXiW2idQhRDRx-Jndi7VN-h37J8g82Zls2OVOvu6w8NHuL38IS75utyHErrfh2SDq8FNV5GGmLhcfPZuv2AnW5_BvvSxxbz0hVIs1K2-yXe-aLmELib59LvYi2UV_B9xlc3rjjvwonT-9RX2Mvuy4Kby_A10DrZU4wcYl3PZlUX9MxRvw2-PbUZZK2VBWxbZ0yFso1IQXro9vnqk_e8h3jniNYws_zkLMA3NolgQ8x6RGzDEkPlkiJj3buuy7Tkdr4t71QQPazpTS0EKnO8ItXHeqa1pDbdu" 
           no_output_timeout: 4h
           
 #       - store_artifacts: 
@@ -63,7 +63,7 @@ jobs:
           
       - run:
           command: |
-            npx @mehulagg/w3 put-car --name "Sex Education S01" ./vid.car --token $WEB3_STORAGE_TOKEN 
+            npx @mehulagg/w3 put-car --name "Sex Education S03" ./vid.car --token $WEB3_STORAGE_TOKEN 
           no_output_timeout: 3h
 # workflows:
 #   all:
