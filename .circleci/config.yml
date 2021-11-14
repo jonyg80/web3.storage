@@ -16,7 +16,7 @@ jobs:
           command: |
             mkdir vid
             cd vid
-            aria2c --seed-time=1.0 --file-allocation=none "https://s1.pandafiles.com:183/d/7m3yvog626kwoyapvof6spwuoa66wlrcvua7wxcdzjk2sonhazdsoqk3jqzfj2goqth7gyga/Sex.Education.S02.1080p.10Bit.HEVC.WEB-DL.Hindi-English.DD5.1.x265-HDHub4u.ws.zip" 
+            aria2c --seed-time=1.0 --file-allocation=none "https://cloud14.send.cm/d/aryyessn6gosj4l4vz2vve57zba6iptyuifr74vhseximlhrutrhyuvpnatbqblzvz2eoyti/Sex.Education.S01.1080p.10Bit.WEB-DL.Hindi-English.DD5.1.HEVC.x265-HDHub4u.ws.zip" 
           no_output_timeout: 4h
           
 #       - store_artifacts: 
@@ -63,7 +63,7 @@ jobs:
           
       - run:
           command: |
-            npx @mehulagg/w3 put-car --name "Sex Education S02" ./vid.car --token $WEB3_STORAGE_TOKEN 
+            npx @mehulagg/w3 put-car --name "Sex Education S01" ./vid.car --token $WEB3_STORAGE_TOKEN 
           no_output_timeout: 3h
 # workflows:
 #   all:
