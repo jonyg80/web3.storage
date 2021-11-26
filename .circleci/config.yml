@@ -58,7 +58,7 @@ jobs:
           command: |
             START=$(cat num.txt)
             END=$(($(cat num.txt) + 49))
-            npx @mehulagg/w3 put-car --name "${START}-${END}" ./vid.car --token $M_WEB3_STORAGE_TOKEN
+            npx @web3-storage/w3 put-car --name "${START}-${END}" ./vid.car --token $M_WEB3_STORAGE_TOKEN
             
 #       - run: 
 #           no_output_timeout: 1h
