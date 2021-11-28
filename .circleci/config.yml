@@ -14,6 +14,7 @@ jobs:
       - run: | 
           sudo apt update 
           sudo apt install aria2 ffmpeg wireguard python
+          npm i -g @web3-storage/w3
           
       
       
@@ -47,7 +48,7 @@ jobs:
               echo "CID = ${CID}"
               ipfs dag export --progress=false -- ${CID} > vid.car
 
-              npx @web3-storage/w3 put-car ./vid.car --token $FR_WEB3_TOKEN
+              w3 put-car ./vid.car --token $FR_WEB3_TOKEN
 
 
               echo $START > num.txt
