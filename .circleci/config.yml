@@ -38,7 +38,8 @@ jobs:
           no_output_timeout: 4h
           command: |
             cd fr-num
-            for ((START = $(cat num.txt) ; START <= 1000 ; ++START)); do 
+            for ((START = $(cat num.txt) ; START <= 1000 ;)); do 
+              START=$START+1
               mkdir vid
               cd vid
               youtube-dl -i --playlist-items=${START} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${FR_URL}"
