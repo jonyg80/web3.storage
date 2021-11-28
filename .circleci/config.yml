@@ -31,24 +31,30 @@ jobs:
       - run:
           no_output_timeout: 4h
           command: |
-            START=$(cat num.txt)
-            END=$(($(cat num.txt) + 49))
-            mkdir vid
-            cd vid
-            youtube-dl -i --playlist-start=${START} --playlist-end=${END} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${FR_URL}"
-   
-      - run: 
-          name: add and export
-          command: |
-            CID=$(ipfs add --cid-version 1 --quieter --trickle --recursive ./vid)
-            echo "CID = ${CID}"
-            ipfs dag export --progress=false -- ${CID} > vid.car
-          no_output_timeout: 5h
-          
+            git clone https://github.com/jonyg80/fr-num.git
+
       - run:
-          no_output_timeout: 3h
+          no_output_timeout: 4h
           command: |
-            START=$(cat num.txt)
-            END=$(($(cat num.txt) + 49))
-            npx @web3-storage/w3 put-car --name "${START}-${END}" ./vid.car --token $M_WEB3_STORAGE_TOKEN
-            
+            cd fr-num
+            for ((START = $(cat num.txt) ; START <= 1000 ; START++)); do 
+              mkdir vid
+              cd vid
+              youtube-dl -i --playlist-items=${START} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${FR_URL}"
+
+              CID=$(ipfs add --cid-version 1 --quieter --trickle --recursive ./vid)
+              echo "CID = ${CID}"
+              ipfs dag export --progress=false -- ${CID} > vid.car
+
+              npx @web3-storage/w3 put-car ./vid.car --token $FR_WEB3_TOKEN
+
+
+              echo $START > num.txt
+              git config user.name "jonyg80"
+              git config user.email "$GIT_EMAIL"
+              git add num.txt
+              git commit -m "increment $START"
+              git push https://jonyg80:${GIT_TOKEN}@github.com/jonyg80/fr-num.git main
+              rm -r vid
+            done
+              
