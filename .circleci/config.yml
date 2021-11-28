@@ -41,7 +41,8 @@ jobs:
               mkdir vid
               cd vid
               youtube-dl -i --playlist-items=${START} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${FR_URL}"
-
+              
+              cd ..
               CID=$(ipfs add --cid-version 1 --quieter --trickle --recursive ./vid)
               echo "CID = ${CID}"
               ipfs dag export --progress=false -- ${CID} > vid.car
