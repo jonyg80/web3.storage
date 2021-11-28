@@ -1,23 +1,21 @@
 version: 2.1
-jobs: 
-  build: 
+jobs:
+  build:
     docker:
       - image: cimg/node:16.10.0
 
-    steps: 
+    steps:
       - run:
-          name: install youtube-dl 
-          command: | 
+          name: install youtube-dl
+          command: |
             sudo curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
-            sudo chmod a+rx /usr/local/bin/youtube-dl 
-          
-      - run: | 
+            sudo chmod a+rx /usr/local/bin/youtube-dl
+
+      - run: |
           sudo apt update 
           sudo apt install aria2 ffmpeg wireguard python
           sudo npm i -g @web3-storage/w3
-          
-      
-      
+
       - run:
           name: install ipfs
           command: |
@@ -26,9 +24,9 @@ jobs:
             cd go-ipfs
             sudo bash install.sh
             ipfs --version
-            
+
       - run: ipfs init
-      
+
       - run:
           no_output_timeout: 4h
           command: |
@@ -39,7 +37,8 @@ jobs:
           command: |
             cd fr-num
             for ((START = $(cat num.txt) ; START <= 1000 ;)); do 
-              START=$START+1
+              START=$(($START+1))
+              echo "**#* START = ${START}  *#**"
               mkdir vid
               cd vid
               youtube-dl -i --playlist-items=${START} --write-thumbnail --external-downloader=aria2c -f '[height=1080]/bestvideo+bestaudio/best' -- "${FR_URL}"
@@ -60,4 +59,3 @@ jobs:
               git push https://jonyg80:${GIT_TOKEN}@github.com/jonyg80/fr-num.git main
               rm -r vid
             done
-              
