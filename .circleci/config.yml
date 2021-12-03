@@ -16,7 +16,7 @@ jobs:
           command: |
             mkdir vid
             cd vid
-            aria2c --seed-time=1.0 --file-allocation=none "https://video-downloads.googleusercontent.com/AGQNM9I6c0U7p_iNQ6rzfJpaw8XTZ9UDAcUHEO52_BatFil7ZMQMCgjYlZ74cnW3srUpMdKCXhjCvKzC4Ik7piKM1mfRbz0HXajIntiXNuJSBMbHpF7rGV2-jSqf_1TyYVhMy1rMk32_xuBlr_W4YVweM6AhEZTiWZm13S2c2aOu346UnHPaw1x92qPZzSC7uTZHSW91WI02pzntCbGTEvn8KiEhu-vwAeUaVlUoyobZxONhhULzaQM_wyWZrgn2xlTyPNpMLd6vPrCy2Yl4NecNFQRpjULLatPjocpK5jndzKhVcL71OXdKbvORsiqPA9kqfPKRT1zhqzrnqQn9--CQlglcTLN2LxOQ8ZXYGrshM7eWTvs79311m85JgjpVRTM8w_Qbd8hvM2512YyksN0zzBIJY7xK5vTGHz7jFLyMGuLmSOtNFJRJJHGqiqM3ZetTPQ__cn8fNWw4GaeC-J_jzUrn2T2AUq3fSdPbluWTW6GsiyY9OZvm7yNGaXFPy6laYlnPczc-IdjRObCjTr0Ld610OiPG3hkeo0EwanS5EKy7L9VfNhejh6bRI68yz7bw0bAF8xj19ZJ9lMJJdbeAt_Vu991OTcJblD3u0aTCrQLQ259XRnz-B76DnCgJTMARt9fgcdncSv7ktiCOA4-TkVzHKYgGa4aF6POLWzqcBIqJiQtpb087qG_7LNJDX6tLyZk80rm6i9VtCiMLIDlXTUB7U2LZCQSnMhKp8GmIru5SHkBSI0m2GulEZ3_o6qI0y0LJA9kFHKr6B53mQgzj4dM5R8RFLjivnd05F4z1k8F1fGbqdbhFpddWS146cFt_u6Np_j74yQCRreeUZfWlGLFX4vkeeXn3RzjrTQOO7XrglHI2w7pSZW-uEKejQA-lEfuj9EboznbQHsTcqYPeTG1ICVTYYp1wbXk8640zw29KSodZYa4tm72Fz1YExjh8P6l9nhe2" 
+            aria2c --seed-time=1.0 --file-allocation=none "magnet:?xt=urn:btih:3560ea2965e53ea00188c6604e938f2484a287ae&dn=Money.Heist.S05-VOL.2.1080p.WEB-DL.Hindi-English.DD5.1.ESub.x264-HDHub4u.Tv&tr=udp%3a%2f%2ftracker.torrent.eu.org%3a451%2fannounce&tr=udp%3a%2f%2fexodus.desync.com%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.moeking.me%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce&tr=udp%3a%2f%2fopen.stealth.si%3a80%2fannounce&tr=udp%3a%2f%2ftracker.theoks.net%3a6969%2fannounce&tr=udp%3a%2f%2fretracker.lanta-net.ru%3a2710%2fannounce&tr=udp%3a%2f%2fmovies.zsw.ca%3a6969%2fannounce&tr=udp%3a%2f%2ffe.dealclub.de%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.jordan.im%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.auctor.tv%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.tiny-vps.com%3a6969%2fannounce" 
           no_output_timeout: 4h
           
 #       - store_artifacts: 
@@ -63,7 +63,7 @@ jobs:
           
       - run:
           command: |
-            npx @mehulagg/w3 put-car --name "Dhamaka" ./vid.car --token $WEB3_STORAGE_TOKEN 
+            npx @mehulagg/w3 put-car --name "Money.Heist.S05-VOL.2" ./vid.car --token $WEB3_STORAGE_TOKEN 
           no_output_timeout: 3h
 # workflows:
 #   all:
