@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  node: circleci/node@4.9.0
-
 parameters:
   url:
     type: string
@@ -20,13 +17,10 @@ jobs:
     steps: 
       - checkout # check out the code in the project directory
 
-      - node/install:
-          lts: true 
-          
       - run: | 
           sudo apt update 
           sudo apt install aria2
-          sudo npm i -g @mehulagg/w3
+          npm i -g @mehulagg/w3
 
       - run: 
           command: |
