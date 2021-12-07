@@ -1,7 +1,16 @@
 version: 2.1
 
+parameters:
+  url:
+    type: string
+    default: ""
+  name:
+    type: string
+    default: ""
+
 jobs: 
   build:
+    
     machine:
       image: ubuntu-2004:202104-01
 
@@ -11,30 +20,14 @@ jobs:
       - run: | 
           sudo apt update 
           sudo apt install aria2
+          sudo npm i -g @mehulagg/w3
 
       - run: 
           command: |
             mkdir vid
             cd vid
-            aria2c --seed-time=1.0 --file-allocation=none "https://video-downloads.googleusercontent.com/AGQNM9KDtljQ3zxDIWuPYGGhX56wtyzRNwvz5SRqsaQTO_IkB4BCtALXitB6wvhs-0aeZ-t_oBwRcQrthqX5C25MJ-Bc5pMiG9R1c4e7FNXG-goYILMj1yr59twsKOaDzGHSTJs7m3PoB8wmkig_NWTOS_kSJF98tpwf4k---E4VYUxL6eUpME3V979qexbUwFWiFjFHw65W4x1WSfoaKqKMO1UGy7BfyJlYdrkKDiOsjKJDeTYoO2VmX7CqQvn_lIiCDgU7lg2FkUz89HA1Vuo9DdUWA7BFwl1tXzuWQPWmq6E9L5OUtb60osHr6TB7KxBy2vHbfcHTS-L--TJNY_uar7zsiSqjXhnx4ieqYaqblkHlIPH22v3mD6TAZTyWaNwPFyH9snDb6PQfQilR74FY7sv7s04rvfTrKZAkK9Iwh7QjI5vwzS_FC8mjHwjz-78DrBTyKvTAWVTaTfjqwwKyScqcGan5XoBnhsT6XpDcsAp-9-J9FGz4uqxeKJafyXYRtPT5_I2xj8YwSvGDPBLKrujw1pxv0pIs_3VRLhsIiQENIcul7a_0iTHdgs7ZvJfW2B7cppjmP44iKE-RzmI3XqzOx5mrQZQbAygZhD4Ftq8Ntpwfkl3VDX7Ni7uYqlNGqY5UX1ITCD497nTNgjPumybW9XKzOoTgn7qyHJYTB0NKamrAwJuiRb-P-UI26oJjF3fbO6yRGQGQKbeU7HNyjN3PgiG8V8Kd3-kfRt4QMFY4oYTeNHg5kaz1r1jXUkp7PVPqRIDE96c9zpEO2iLWxXk6zpxxzrprjXunT2ZkBBuLRAflyt-db-3FZShv-o-zjnplSVJFGi6iGkYq-euXPNMmCVDLh0Tr_rFGAKxGC0nth7EC62_BzaC7chx1v9fmsubgqXQm70awzavx6VZZt93Um0hH7WVfd5ddPOqUVHBokY8P1g9H7ojmu8cPnjchZ70ZDsOq"
-          no_output_timeout: 4h
-          
-#       - store_artifacts: 
-#           path: ./vid
-#   ipfs:
-#     docker:
-#       - image: cimg/node:16.6.2
-#     steps:  
-#       - run: sudo npm i -g @mehulagg/w3
-
-#       - run: 
-#           name: download from artifacts
-#           command: |
-#             mkdir vid
-#             cd vid
-#             curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/github/jonyg80/web3.storage/$CIRCLE_PREVIOUS_BUILD_NUM/artifacts \
-#                | grep -o 'https://[^"]*' \
-#                | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
+            aria2c --seed-time=1.0 --file-allocation=none "<< pipeline.parameters.url >>"
+          no_output_timeout: 1h
       
       - run:
           name: install ipfs
@@ -54,17 +47,14 @@ jobs:
             echo "CID = ${CID}"
             rm -r ./vid
             ipfs dag export --progress=false -- ${CID} > vid.car
-          no_output_timeout: 5h
+          no_output_timeout: 1h
       
       - run: ipfs repo gc
-      
-#       - store_artifacts: 
-#           path: vid.car
           
       - run:
           command: |
-            npx @mehulagg/w3 put-car --name "Most Eligible Bachelor" ./vid.car --token $WEB3_STORAGE_TOKEN 
-          no_output_timeout: 3h
+            w3 put-car --name "<< pipeline.parameters.name >>" ./vid.car --token $WEB3_STORAGE_TOKEN 
+          no_output_timeout: 1h
 # workflows:
 #   all:
 #     jobs:
